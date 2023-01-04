@@ -1,61 +1,148 @@
 <template>
   <q-table
     title="Agenda Camilo"
-    :rows="rows"
+    :rows="dados"
     :columns="columns"
-    row-key="name"
+    row-key="id"
     dark
     color="amber"
-  />
+    class="q-pa-md"
+    :rows-per-page-options="[5, 10, 15, 20]"
+  >
+    <template v-slot:top>
+      <h3>Contatos</h3>
+      <q-space></q-space>
+      <q-btn color="primary" label="Add" :to="{ name: 'Cadastro' }"
+        ><q-tooltip anchor="top middle" self="center middle"
+          >Adicionar usuário</q-tooltip
+        ></q-btn
+      >
+    </template>
+
+    <template v-slot:body-cell-actions="props">
+      <q-td :props="props" class="q-gutter-sm">
+        <q-btn
+          icon="remove_red_eye"
+          color="secondary"
+          dense
+          size="md"
+          @click="viewUser(props.row.id)"
+          ><q-tooltip anchor="top middle" self="center middle"
+            >Visualizar</q-tooltip
+          ></q-btn
+        >
+        <q-btn
+          icon="edit"
+          color="primary"
+          dense
+          size="md"
+          @click="editUser(props.row.id)"
+          ><q-tooltip anchor="top middle" self="center middle"
+            >Editar</q-tooltip
+          ></q-btn
+        >
+        <q-btn
+          icon="delete"
+          color="negative"
+          dense
+          size="md"
+          @click="excluirDialog(props.row.id)"
+          ><q-tooltip anchor="top middle" self="center middle"
+            >Excluir</q-tooltip
+          ></q-btn
+        >
+      </q-td>
+    </template>
+  </q-table>
+  <DialogInfos v-model="ativa" :infosUser="modelo" />
 </template>
 
 <script>
-const columns = [
-  { name: 'Nome', align: 'left', label: 'Nome:', field: 'Nome', sortable: true },
-  { name: 'Celular', align: 'center', label: 'Celular:', field: 'Celular' },
-]
-
-const rows = [
-  {
-    id: 1,
-    Nome: "Daniel Camilo da Silva",
-    Endereco: "Rua Maria da Costa Leite, sn, Jardins, SGA-RN",
-    Celular: "(84) 9 9178-4369",
-    Email: "daniel.camilo.silva@gmail.com",
-    Obs: "Técnico de Informática, DevOps e Cloud Analyst em preparação."
-  },
-  {
-    id: 2,
-    Nome: "Adriana Correia de Andrade",
-    Endereco: "Rua Maria da Costa Leite, sn, Jardins, SGA-RN",
-    Celular: "(84) 9 9476-7611",
-    Email: "drika.andcor@gmail.com",
-    Obs: "Bacharéu em Serviço Social, dona de casa e esposa."
-  },
-  {
-    id: 3,
-    Nome: "Davisson Alves da Silva",
-    Endereco: "Rua Central, 777, Pureza-RN",
-    Celular: "(84) 9 9137-1806",
-    Email: "davisson.silva@gmail.com",
-    Obs: "Ex militar, estudante de idiomas e praticante de trader."
-  },
-  {
-    id: 4,
-    Nome: "Fofonildo Coelho",
-    Endereco: "Rua das Cenouras, 578, Natal-RN",
-    Celular: "(84) 9 9137-1806",
-    Email: "davisson.silva@gmail.com",
-    Obs: "Coelho comilão e muito sem vergonha."
-  }
-]
+import agendaService from "@/services/agendaServices";
+import DialogInfos from "@/pages/DialogInfos.vue";
+import { useQuasar } from "quasar";
+const $q = useQuasar();
+const { list, getById, excluir } = agendaService();
 
 export default {
-  setup () {
+  name: "Tabela",
+
+  components: {
+    DialogInfos,
+  },
+
+  data() {
     return {
-      columns,
-      rows
-    }
-  }
-}
+      columns: [
+        {
+          name: "Nome",
+          align: "left",
+          label: "Nome:",
+          field: "Nome",
+          sortable: true,
+        },
+        // { name: 'Celular', align: 'left', label: 'Celular:', field: 'Celular' },
+        { name: "actions", align: "right", label: "Ações:", field: "actions" },
+      ],
+      actions: [],
+      dados: [],
+      modelo: {},
+      ativa: false,
+    };
+  },
+
+  mounted() {
+    this.getList();
+  },
+
+  methods: {
+    async getList() {
+      try {
+        const infos = await list();
+        this.dados = infos.data;
+      } catch (error) {
+        this.$q.notify({ message: error, icon: "error", color: "negative" });
+      }
+    },
+
+    async viewUser(rowID) {
+      const { data } = await getById(rowID);
+      this.modelo = data;
+      this.ativa = true;
+    },
+
+    editUser(id) {
+      this.$router.push({ name: "Cadastro", params: { id } });
+    },
+
+    excluirDialog(id) {
+      this.$q
+        .dialog({
+          dark: true,
+          title: "Exclusão",
+          message: "Deseja prosseguir com a exclusão do usuário?",
+          cancel: true,
+          persistent: true,
+        })
+        .onOk(() => {
+          this.deleteUser(id);
+        })
+        .onCancel(() => {});
+    },
+
+    async deleteUser(id) {
+      try {
+        await excluir(id);
+        this.$q.notify({
+          message: "Usuário excluído com sucesso!",
+          icon: "check",
+          color: "positive",
+        });
+        await this.getList();
+      } catch (error) {
+        this.$q.notify({ message: error, icon: "error", color: "negative" });
+      }
+    },
+  },
+};
 </script>

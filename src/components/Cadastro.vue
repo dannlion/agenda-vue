@@ -1,63 +1,135 @@
 <template>
-  <q-page-container>
-    <q-input
-      standout="bg-teal text-white"
-      v-model="nome"
-      label="Nome:"
-    />
-    <br />
-    <q-input standout="bg-teal text-white" v-model="endereco" label="Endereço:" />
-    <br />
-    <q-input
-      standout="bg-teal text-white"
-      v-model="cel"
-      label="Celular:"
-      mask="(##) # ####-####"
-    />
-    <br />
-    <q-input type="email" standout="bg-teal text-white" v-model="email" label="E-mail:" />
-    <br />
-    <q-input type="textarea" standout="bg-teal text-white" v-model="obs" label="Observações:"/>
-    <br />
-    <q-btn push color="primary" text-color="white" label="Cadastrar" @click="alert = true" />
-  </q-page-container>
-
-  <!-- Aqui começa o código do Alert: -->
-  <q-dialog v-model="alert">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Info</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          {{ nome }}
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="OK" color="primary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+  <div class="bg-teal-9 tit">
+    <h4 class="text-yellow-3 text-h4 text-center">{{ titulo }}</h4>
+  </div>
+  <div class="q-pa-md">
+    <q-form @submit="actionForm()" class="q-col-gutter-sd">
+      <q-input
+        standout="bg-teal text-white"
+        v-model="modelo.Nome"
+        label="Nome:"
+        lazy-rules
+        :rules="[(val) => (val && val.length > 0) || 'Campo obrigatório']"
+      />
+      <q-input
+        standout="bg-teal text-white"
+        v-model="modelo.Endereco"
+        label="Endereço:"
+        lazy-rules
+        :rules="[(val) => (val && val.length > 0) || 'Campo obrigatório']"
+      />
+      <q-input
+        type="tel"
+        standout="bg-teal text-white"
+        v-model="modelo.Celular"
+        lazy-rules
+        :rules="[(val) => (val && val.length > 0) || 'Campo obrigatório']"
+        label="Celular:"
+        mask="(##) # ####-####"
+      />
+      <q-input
+        type="email"
+        standout="bg-teal text-white"
+        lazy-rules
+        :rules="[(val) => (val && val.length > 0) || 'Campo obrigatório']"
+        v-model="modelo.Email"
+        label="E-mail:"
+      />
+      <q-input
+        type="textarea"
+        standout="bg-teal text-white"
+        v-model="modelo.Obs"
+        label="Observações:"
+      />
+      <div class="q-gutter-sm q-pt-md">
+        <q-btn
+          type="submit"
+          push
+          color="primary"
+          text-color="white"
+          label="Salvar"
+          class="float-right"
+          icon="save"
+        />
+        <q-btn
+          push
+          color="indigo-1"
+          text-color="primary"
+          label="Cancelar"
+          class="float-right"
+          :to="{ name: 'Tabela' }"
+        />
+      </div>
+    </q-form>
+  </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import agendaService from "@/services/agendaServices";
+import { useQuasar } from "quasar";
+const { post, getById, update } = agendaService();
+const $q = useQuasar();
 
 export default {
-  setup () {
+  name: "Cadastro",
+  data() {
     return {
-      nome: ref(""),
-      endereco: ref(""),
-      cel: ref(""),
-      email: ref(""),
-      obs: ref(""),
-      alert: ref(false),
-    }
+      modelo: {
+        Nome: "",
+        Endereco: "",
+        Celular: "",
+        Email: "",
+        Obs: "",
+      },
+      titulo: "Cadastro",
+    };
+  },
+  mounted() {
+    (async () => {
+      if (this.$route.params.id) {
+        const { data } = await getById(this.$route.params.id); // "getById" vem de "agendaService".
+        this.modelo = data;
+        this.titulo = "Alteração";
+      }
+    })();
   },
   methods: {
-    teste() {
-      alert(this.nome)
-    }
-  }
-}
+    /*
+    A função "actionForm" é acionada pelo botão de Submit.
+    A condição "if" define se vai salvar um novo usuário ou editar dados de um já existente.
+    */
+    async actionForm() {
+      if (this.$route.params.id) {
+        await update(this.$route.params.id, this.modelo);
+        this.$q.notify({
+          message: "Dados editados com sucesso!",
+          icon: "check",
+          color: "positive",
+        });
+        this.$router.push({ name: "Tabela" });
+      } else {
+        await this.sendDados();
+      }
+    },
+    async sendDados() {
+      const res = await post(this.modelo); // Só para lembrar que este "post" vem de "agendaService".
+      this.$q.notify({
+        message: res.message,
+        icon: "check",
+        color: "positive",
+      });
+      this.$router.push({ name: "Tabela" });
+    },
+  },
+};
 </script>
+<style scoped>
+.tit {
+  background-color: #666;
+  border-radius: 10px;
+  margin-right: 15px;
+  margin-left: 15px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+</style>
