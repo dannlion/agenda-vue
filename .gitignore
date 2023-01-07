@@ -4,6 +4,7 @@ dist
 Testing
 
 # local env files
+.env.production
 .env.local
 .env.*.local
 .env
