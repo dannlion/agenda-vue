@@ -1,7 +1,0 @@
-// Criado para aproveitar as definições de configuração do banco de dados.
-const path = require("path");
-
-module.exports = {
-  config: path.resolve(__dirname, "api", "config", "config.js"),
-  "migrations-path": path.resolve(__dirname, "api", "migrations"),
-};

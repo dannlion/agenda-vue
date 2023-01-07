@@ -3,8 +3,8 @@
     <q-header elevated class="bg-grey-8 text-white">
       <q-toolbar>
         <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
+          <q-avatar :square="true">
+            <img src="@/assets/agenda.png" />
           </q-avatar>
           Vue Agenda
         </q-toolbar-title>
@@ -20,14 +20,7 @@
     </q-page-container>
 
     <q-footer elevated class="bg-grey-8 text-white">
-      <q-toolbar>
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-          </q-avatar>
-          DannCS Apps
-        </q-toolbar-title>
-      </q-toolbar>
+      <q-toolbar class="primary">Developed by Daniel Camilo</q-toolbar>
     </q-footer>
   </q-layout>
 </template>

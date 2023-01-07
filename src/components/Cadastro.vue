@@ -1,6 +1,13 @@
 <template>
-  <div class="bg-teal-9 tit">
-    <h4 class="text-yellow-3 text-h4 text-center">{{ titulo }}</h4>
+  <div class="bg-teal-9 text-yellow-3 text-h4 tit">
+    <q-avatar
+      size="75px"
+      font-size="52px"
+      color="teal"
+      text-color="white"
+      :icon="titulo_icon"
+    />
+    {{ titulo }}
   </div>
   <div class="q-pa-md">
     <q-form @submit="actionForm()" class="q-col-gutter-sd">
@@ -81,7 +88,8 @@ export default {
         Email: "",
         Obs: "",
       },
-      titulo: "Cadastro",
+      titulo: "Adicionar",
+      titulo_icon: "description",
     };
   },
   mounted() {
@@ -89,7 +97,8 @@ export default {
       if (this.$route.params.id) {
         const { data } = await getById(this.$route.params.id); // "getById" vem de "agendaService".
         this.modelo = data;
-        this.titulo = "Alteração";
+        this.titulo = "Editar";
+        this.titulo_icon = "mode";
       }
     })();
   },

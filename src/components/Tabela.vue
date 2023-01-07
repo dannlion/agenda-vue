@@ -12,9 +12,13 @@
     <template v-slot:top>
       <h3>Contatos</h3>
       <q-space></q-space>
-      <q-btn color="primary" label="Add" :to="{ name: 'Cadastro' }"
+      <q-btn
+        color="deep-orange-8"
+        icon="add_call"
+        size="lg"
+        :to="{ name: 'Cadastro' }"
         ><q-tooltip anchor="top middle" self="center middle"
-          >Adicionar usuário</q-tooltip
+          >Adicionar contato</q-tooltip
         ></q-btn
       >
     </template>

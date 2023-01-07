@@ -1,5 +1,5 @@
 FROM node:18.12.1-bullseye-slim
-
+RUN npm install npm -g
 # install simple http server for serving static content
 RUN npm install -g http-server
 

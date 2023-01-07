@@ -1,26 +1,18 @@
 {
   "name": "vue-agenda",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --mode production",
-    "backend": "node api/server.js"
+    "build-dev": "vue-cli-service build --mode development",
+    "build": "vue-cli-service build --mode production"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
-    "axios": "^1.2.1",
-    "body-parser": "^1.20.1",
     "core-js": "^3.8.3",
-    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "morgan": "^1.10.0",
-    "mysql2": "^2.3.3",
     "quasar": "^2.0.0",
-    "sequelize": "^6.27.0",
     "vue": "^3.2.13",
-    "vue-axios": "^3.5.2",
     "vue-router": "^4.1.6",
     "vuex": "^4.0.0"
   },
@@ -30,7 +22,6 @@
     "@vue/cli-service": "~5.0.0",
     "sass": "1.32.12",
     "sass-loader": "^12.0.0",
-    "sequelize-cli": "^6.5.2",
     "vue-cli-plugin-quasar": "~5.0.1"
   }
 }
