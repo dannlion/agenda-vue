@@ -5,8 +5,12 @@ import { Quasar } from "quasar";
 import quasarUserOptions from "./quasar-user-options";
 import router from "@/routes";
 
+import axios from "axios";
+import VueAxios from "vue-axios";
+
 createApp(App)
   .use(Quasar, quasarUserOptions)
   .use(store)
+  .use(VueAxios, axios)
   .use(router)
   .mount("#app");

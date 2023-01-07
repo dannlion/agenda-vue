@@ -1,22 +1,43 @@
-# vue-agenda
+# Vue Agenda
 
-Esta aplicação é o resultado de estudos com práticas "Hands-on" utilizando as tecnologias:
-Vue.JS 3
-Quasar 2
+Projeto de uma Agenda telefônica simples.
+Resultado de práticas "Hands-on" utilizando as seguintes tecnologias:
 
-NodeJS
-Express
-MySQL
-Sequelize
+#### Front End
 
-Docker
-Github
-OCI - Oracle Cloud Infraestructure
+- Vue.JS 3 (com Options API)
+- Axios/Vue-Axios
+- Quasar 2
 
-## Project setup
+#### Back end (API):
 
-npm install
+- NodeJS
+- Express
+- Sequelize
 
-### Customize configuration
+#### Banco de dados:
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- MySQL
+
+#### Cloud
+
+- Oracle Cloud Infraestructure (OCI)
+
+#### Container
+
+- Docker
+
+**Instalação:**
+
+```
+npm install npm --save
+npm install --loglevel=error
+```
+
+**Execução:**
+
+```
+npm run serve               # Executa em modo de desenvolvimento local.
+npm run build-dev           # Compilar para testes de desenvolvimento.
+npm run build-production    # Compilar para produção.
+```
