@@ -2,7 +2,7 @@ import useApi from "@/composables/useApi";
 
 export default function agendaService() {
   const { list, getById, post, update, excluir } = useApi(
-    process.env.VUE_APP_URL_API
+    "http://ampere1.zapto.org:3000"
   );
 
   return {
